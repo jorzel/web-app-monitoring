@@ -10,6 +10,11 @@ services:
       - type: bind
         source: ./prometheus.yml
         target: /etc/prometheus/prometheus.yml
+      - ./prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+
   web-app:
     image: web-app-monitoring:v0
     ports:
