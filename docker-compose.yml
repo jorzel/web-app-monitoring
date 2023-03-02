@@ -10,3 +10,8 @@ services:
       - type: bind
         source: ./prometheus.yml
         target: /etc/prometheus/prometheus.yml
+  web-app:
+    image: web-app-monitoring:v0
+    ports:
+      - target: 8000
+        published: 8080
