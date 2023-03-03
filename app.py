@@ -9,11 +9,17 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 app = Flask(__name__)
 app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {"/metrics": make_wsgi_app()})
 
+import prometheus_client
+
+prometheus_client.REGISTRY.unregister(prometheus_client.GC_COLLECTOR)
+prometheus_client.REGISTRY.unregister(prometheus_client.PLATFORM_COLLECTOR)
+prometheus_client.REGISTRY.unregister(prometheus_client.PROCESS_COLLECTOR)
 
 HTTP_REQUEST_DURATION = Histogram(
     "http_request_duration",
     "Requests durations",
     ["method", "url", "code"],
+    buckets=[0.01, 0.1, 0.5, 2, float("inf")],
 )
 
 
