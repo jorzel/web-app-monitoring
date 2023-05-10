@@ -1,0 +1,11 @@
+groups:
+  - name: web-app
+    rules:
+      - alert: Application down
+        for: 1m
+        expr: up{job="web-app"} == 0
+        labels:
+          severity: critical
+        annotations:
+          title: App is down on {{ $labels.instance }}
+          description: The app on instance {{ $labels.instance }} has been down for the past 1 minute.

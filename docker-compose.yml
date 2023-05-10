@@ -10,10 +10,27 @@ services:
       - type: bind
         source: ./prometheus.yml
         target: /etc/prometheus/prometheus.yml
+      - type: bind
+        source: ./rules.yml
+        target: /etc/prometheus/rules.yml
       - ./prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
+
+  alertmanager:
+    image: prom/alertmanager:v0.25.0
+    ports:
+      - 9093:9093
+    volumes:
+      - type: bind
+        source: ./alertmanager.yml
+        target: /etc/alertmanager/config.yml
+    restart: always
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+      - '--log.level=debug'
 
   web-app:
     image: web-app-monitoring:v0
